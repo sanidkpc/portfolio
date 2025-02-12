@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test name</title>
+    <link rel="stylesheet" href="https://rezve.com/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/blog">Blog</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content"></main>
+
+    <template id="home">
+      <h1>Welcome home</h1>
+    </template>
+    <template id="about">
+      <h1>About Me</h1>
+    </template>
+    <template id="blog">
+      <h1>Blog</h1>
+    </template>
+
+    <script>
+      const routes = [
+        { path: "home", templateId: "home" },
+        { path: "about", templateId: "about" },
+        { path: "blog", templateId: "blog" },
+        { path: "projects", templateId: "projects" },
+        { path: "podcasts", templateId: "podcasts" },
+        { path: "books", templateId: "books" },
+      ];
+
+      function loadRoute(path) {
+        const route = routes.find((r) => r.path === path) || routes[0];
+        document.getElementById("content").innerHTML = document.getElementById(
+          route.templateId
+        ).innerHTML;
+      }
+
+      document.addEventListener("click", (e) => {
+        const link = e.target.closest("a[href^='/']");
+        if (!link) return;
+
+        e.preventDefault();
+        history.pushState({}, "", link.pathname);
+        loadRoute(link.pathname.slice(1) || "home");
+      });
+
+      window.onpopstate = () => loadRoute(location.pathname.slice(1) || "home");
+
+      loadRoute(location.pathname.slice(1) || "home");
+    </script>
+  </body>
+</html>
